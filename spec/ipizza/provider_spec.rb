@@ -24,5 +24,8 @@ describe Ipizza::Provider do
     it 'returns nordea provider for "nordea" attribute' do
       Ipizza::Provider.get('nordea').should be_a(Ipizza::Provider::Nordea)
     end
+    it 'returns lhv provider for "lhv" attribute' do
+      Ipizza::Provider.get('lhv').should be_a(Ipizza::Provider::Lhv)
+    end
   end
 end

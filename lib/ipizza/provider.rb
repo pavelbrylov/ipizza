@@ -18,6 +18,8 @@ module Ipizza
           Ipizza::Provider::Sampo.new
         when 'nordea'
           Ipizza::Provider::Nordea.new
+        when 'lhv'
+          Ipizza::Provider::Lhv.new
         end
       end
     end
