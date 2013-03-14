@@ -27,7 +27,7 @@ module Ipizza::Provider
 
       param_order = ['VK_SERVICE', 'VK_VERSION', 'VK_SND_ID', 'VK_STAMP', 'VK_AMOUNT', 'VK_CURR', 'VK_REF', 'VK_MSG']
 
-      req.sign(self.class.file_key, self.class.key_secret, param_order)
+      req.sign(self.class.file_key, self.class.key_secret, param_order, 'VK_MAC', 'swedbank')
       req
     end
 
