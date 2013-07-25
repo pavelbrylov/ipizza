@@ -34,8 +34,8 @@ describe Ipizza::Provider::Lhv do
 
   describe '#authentication_request' do
     before(:each) do
-      Time.stub!(:now).and_return(Time.parse("Mar 30 1981"))
-      Date.stub!(:today).and_return(Date.parse("Mar 30 1981"))
+      Time.stub(:now).and_return(Time.parse("Mar 30 1981"))
+      Date.stub(:today).and_return(Date.parse("Mar 30 1981"))
     end
     
     it 'should sign the request' do
