@@ -9,7 +9,7 @@ module Ipizza::Provider
       req = Ipizza::PaymentRequest.new
       req.service_url = self.class.service_url
       req.sign_params = {
-        'VK_SERVICE' => '1002',
+        'VK_SERVICE' => service.to_s,
         'VK_VERSION' => '008',
         'VK_SND_ID' => self.class.snd_id,
         'VK_STAMP' => payment.stamp,
