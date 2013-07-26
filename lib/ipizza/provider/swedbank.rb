@@ -20,7 +20,7 @@ module Ipizza::Provider
       }
 
       req.extra_params = {
-        'VK_CHARSET' => self.class.encoding,
+        'VK_ENCODING' => self.class.encoding,
         'VK_RETURN' => self.class.return_url,
         'VK_CANCEL' => self.class.cancel_url
       }
