@@ -10,7 +10,7 @@ describe Ipizza::Provider::Seb do
     
     it 'should sign the request' do
       req = Ipizza::Provider::Seb.new.payment_request(@payment)
-      req.sign_params['VK_MAC'].should == 'aVCFvsLJiczQw9VoYMdtoQKj5fXkP8OI+JfQN8bFGKZGxC/X5gVIIi/Bh9AyB6JXwbeMOfUlnvuJIukpmBpDg3dEWkv4xGwKdfacqwYkgSC17OBb7VmZ+B4d6HYaO088wxH1FBSVa87HKFJ7ScTEJfd3ZEZly9WzTPHiFWvpRGDxAYtuO5nfGMcscxOQ0B0cbrIcLKvqLho25hIgns3+lvRDWsOb9lFH//7U8OBOC9SuXCBwvC4Fng3wqmBSKRJgAqvQ40Y4XpBGt3U/ix26Vs1cP8lOGHUyqzrqKbcmvqqhgWzqpa0JoK6im/MhBePyNnHVoC8Pqw4ZwZb4YrrPXw=='
+      req.sign_params['VK_MAC'].should == 'b+BDCAzFseg32yZpFwUupwZYtJbzUqswSUo46+0WV0KO7iGrNHfHHUzvdo8TOWxHh6kobM1//t0GmRxs23zOCJH9+3mZXFDxFfinINvKLIDy4EDIrN6oxWP5Vlckzh7l9CeNy+QoeeSxBwkYlYstpdVu/7sgkNHDbf7s5twCXXzd+KIEabOovOaGkPmkQ43+nq159I4XHRHwlGrddi3YmOQ+K54Tn06tnmh/XeAyE937NiIEdcMikKPW+J0iJAMDYR220PIySeHuq3tMoagkHGe2hVkorarZ4wJurGn/pi+s3w9ptpSKkvws6n/01I217ZgdionHK/IkLgB7RNa8Rg=='
     end
   end
 
@@ -27,6 +27,7 @@ describe Ipizza::Provider::Seb do
     end
     
     it 'should parse and verify the payment response from bank' do
+      puts Ipizza::Provider::Seb.snd_id.inspect
       Ipizza::Provider::Seb.new.payment_response(@params).should be_valid
     end
   end
@@ -39,7 +40,7 @@ describe Ipizza::Provider::Seb do
     
     it 'should sign the request' do
       req = Ipizza::Provider::Seb.new.authentication_request
-      req.sign_params['VK_MAC'].should == '0ZBLzC3XddTNZ4YBNJlPsJ/RDK4g7Utot9L3lvaxD9J0dfKfN4FUnife3oAQjhyc8lOi5MeBdjekN5mW7KXEMcOSTR9kCJTLZcJg1nMHTDjZcLu9FTAk2wcSrc8kUgigh22vBA38wQfbsZvong5ETYanH8RchZUp72tmO2rFmKzdD8bsnubg6l3m5NxoFv+2F6RsxzwtpkCNaKBpIH4iyWIYFWX7H3hTiUWlAXwKp8GP8OYPr1wUDbP2jVxOwpv7MW3g/heKfu3INBSazsvD22WhsNeKPKmqjJDIiJvo5QRhYq5Shze28oWQyCixMfw2UW7pk0gOtYJkrlwEEo22zQ=='
+      req.sign_params['VK_MAC'].should == 'x5cw9hhsiAsoh6y/UWowo8gUSkEjLhvI7+XJAXsGmdjDAxrsh//TAyXeaG05p8qOVjMeNce22tvkLU2XAml3kCaldQTS1FhvXlm8Z2Q58zzquvp2nBkHeI2R1XW6bxBGQAxHnPCop9c7WFp1w1b981Pfg0CMqrjfTivJKYVVTSgxGATPw/9AvZCCsN8bM8nXUjhcHZj+ar+QiQBXx8LOeXr+jXMVyDgSe47Mqa0nGnKFAksmBqVTOItHHgEy12EID/bW5iwFi6hykgmHEW74idHdjLnikJA+Qu+wU8QONk51f1BZwMgzvxZYDGPFvtbr05gcH6zijko1rDWEg5i/jA=='
     end
   end
 

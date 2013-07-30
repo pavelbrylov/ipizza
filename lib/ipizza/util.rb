@@ -61,7 +61,7 @@ module Ipizza
 
       # p(x) is length of the field x represented by three digits
       def func_p(val, bankname)
-        if RUBY_VERSION < '1.9' || bankname == "swedbank"
+        if RUBY_VERSION < '1.9' || bankname == Ipizza::Provider::Swedbank::Id
           sprintf("%03i", val.size)
         else 
           sprintf("%03i", val.bytesize)

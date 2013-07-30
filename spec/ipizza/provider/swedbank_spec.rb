@@ -10,26 +10,47 @@ describe Ipizza::Provider::Swedbank do
     
     it 'signs the request' do
       req = Ipizza::Provider::Swedbank.new.payment_request(@payment)
-      req.sign_params['VK_MAC'].should == 'aVCFvsLJiczQw9VoYMdtoQKj5fXkP8OI+JfQN8bFGKZGxC/X5gVIIi/Bh9AyB6JXwbeMOfUlnvuJIukpmBpDg3dEWkv4xGwKdfacqwYkgSC17OBb7VmZ+B4d6HYaO088wxH1FBSVa87HKFJ7ScTEJfd3ZEZly9WzTPHiFWvpRGDxAYtuO5nfGMcscxOQ0B0cbrIcLKvqLho25hIgns3+lvRDWsOb9lFH//7U8OBOC9SuXCBwvC4Fng3wqmBSKRJgAqvQ40Y4XpBGt3U/ix26Vs1cP8lOGHUyqzrqKbcmvqqhgWzqpa0JoK6im/MhBePyNnHVoC8Pqw4ZwZb4YrrPXw=='
+      req.sign_params['VK_MAC'].should == 'lmy2ApT7Z5XnidrAw6C9sfPHaDTh5y0vco9wJuG71BpYYnGN8sfbWgiNwpQOoNeZV00MdchePknxswPsSsG4G5m3/V1m+VL+zAKw8nLvC3WGpfL4JYn4wx61U8Axn8loPq5qHzgSYASLb/rsbeP4ep91AGSLa+dUgpF2m2sTmeu5/us1r4CIqvTkUj0XkdKi1lFOMkDMbdoAeQSnfIRp7nJ4jTRXBY4v2HcTYDh55bv/jEhvQOFaM9nggHysj2hRNMWfxgrfE1s/e93cBzS643X43a9HOndUvv5FI0VdTaUKqudIdINy5sSdSa7lSW+8gzDDD3H+BZ0o6G1bgQaeTg=='
     end
   end
 
   describe '#payment_response' do
-    before(:each) do
-      @params = {
-        'VK_T_NO' => '587', 'encoding' => 'UTF-8', 'VK_REC_ID' => 'fraktal', 'VK_REF' => '201107010000080',
-        'VK_SND_NAME' => Iconv.conv('ISO-8859-4', 'UTF-8', 'TÕNU RUNNEL'), 'VK_T_DATE' => '01.07.2011', 'VK_STAMP' => '20110701000008', 'VK_SND_ACC' => '1108126403',
-        'VK_LANG' => 'EST', 'VK_SERVICE' => '1101', 'VK_REC_NAME' => Iconv.conv('ISO-8859-4', 'UTF-8', 'FRAKTAL OÜ'), 'VK_AMOUNT' => '0.17',
-        'VK_MSG' => 'Edicy invoice #20110701000008', 'VK_AUTO' => 'N', 'VK_SND_ID' => 'HP', 'VK_VERSION' => '008', 'VK_ENCODING' => 'ISO-8859-4',
-        'VK_REC_ACC' => '221038811930', 'VK_CURR' => 'EUR',
-        'VK_MAC' => 'geOA+gjLJlFouGMih0WhbQwTehZM1FVus1OhO34yt8shekINWOzUi6gLymq9HYSDIAx/Gw2iUOKGxzhCRsXu3fxjVVlXpS9YRQfFF8HG1zoU2OUiNBZVa+7bGGDLOy+ZIhnyaW1I3jIFXHd57xDyCVCQvB0Ot4Ya9yE3YMKHTk4='
-      }
+    context 'valid receiver id' do
+      before do
+        @params = {
+          'VK_T_NO' => '587', 'encoding' => 'UTF-8', 'VK_REC_ID' => 'fraktal', 'VK_REF' => '201107010000080',
+          'VK_SND_NAME' => Iconv.conv('ISO-8859-4', 'UTF-8', 'TÕNU RUNNEL'), 'VK_T_DATE' => '01.07.2011', 'VK_STAMP' => '20110701000008', 'VK_SND_ACC' => '1108126403',
+          'VK_LANG' => 'EST', 'VK_SERVICE' => '1101', 'VK_REC_NAME' => Iconv.conv('ISO-8859-4', 'UTF-8', 'FRAKTAL OÜ'), 'VK_AMOUNT' => '0.17',
+          'VK_MSG' => 'Edicy invoice #20110701000008', 'VK_AUTO' => 'N', 'VK_SND_ID' => 'HP', 'VK_VERSION' => '008', 'VK_ENCODING' => 'ISO-8859-4',
+          'VK_REC_ACC' => '221038811930', 'VK_CURR' => 'EUR',
+          'VK_MAC' => 'geOA+gjLJlFouGMih0WhbQwTehZM1FVus1OhO34yt8shekINWOzUi6gLymq9HYSDIAx/Gw2iUOKGxzhCRsXu3fxjVVlXpS9YRQfFF8HG1zoU2OUiNBZVa+7bGGDLOy+ZIhnyaW1I3jIFXHd57xDyCVCQvB0Ot4Ya9yE3YMKHTk4='
+        }
       
-      Ipizza::Provider::Swedbank.file_cert = File.expand_path('../../../certificates/swedbank_production.pem', __FILE__)
+        Ipizza::Provider::Swedbank.file_cert = File.expand_path('../../../certificates/swedbank_production.pem', __FILE__)
+      end
+    
+      it 'parses and verifies the payment response from bank' do
+        Ipizza::Provider::Swedbank.new.payment_response(@params).should be_valid
+      end
     end
     
-    it 'parses and verifies the payment response from bank' do
-      Ipizza::Provider::Swedbank.new.payment_response(@params).should be_valid
+    context 'invalid receiver id' do
+      before do
+        @params = {
+          'VK_T_NO' => '61', 'encoding' => 'UTF-8', 'VK_REC_ID' => 'AVOR', 'VK_REF' => '3130091546',
+          'VK_SND_NAME' => Iconv.conv('ISO-8859-4', 'UTF-8', 'HELE TALU'), 'VK_T_DATE' => '29.07.2013', 'VK_STAMP' => '1300915', 'VK_SND_ACC' => '221010328014',
+          'VK_LANG' => 'EST', 'VK_SERVICE' => '1101', 'VK_REC_NAME' => 'AVOR KINDLUSTUSMAAKLER OÜ', 'VK_AMOUNT' => '1.00',
+          'VK_MSG' => 'Arve 1300915, 906MLG kaskokindlustus.', 'VK_AUTO' => 'Y', 'VK_SND_ID' => 'HP', 'VK_VERSION' => '008', 'VK_ENCODING' => 'UTF-8',
+          'VK_REC_ACC' => '221047583000', 'VK_CURR' => 'EUR',
+          'VK_MAC' => 'raCFs6LYla0zDgHIqIYqSBJpDAbovAmBg9gKsfO/A7DjLEZGJesGu+QexOArMs/f0iAL9ddweKK7piHLEZjCUDqBT8Uxum31LcAR73XcDfb3+eDNPsWMDFDswO9ewT+XHgnaWfG7qtK6dW/8OM3tWvpWnOnDzA9VQTK32F833EI='
+        }
+
+        Ipizza::Provider::Swedbank.file_cert = File.expand_path('../../../certificates/swedbank_production_v2.pem', __FILE__)
+      end
+
+      it 'parses and verifies the payment response from bank' do
+        Ipizza::Provider::Swedbank.new.payment_response(@params).should_not be_valid
+      end      
     end
   end
 
@@ -41,7 +62,7 @@ describe Ipizza::Provider::Swedbank do
     
     it 'should sign the request' do
       req = Ipizza::Provider::Swedbank.new.authentication_request
-      req.sign_params['VK_MAC'].should == 'C9HV2e9IKnHcFGKjnDjx0caBMnhBtpXeZE8GOFD9Qph/KKO3eAJbMNDGJ7bOBFulot/rZVOVaqYIgTcGEfmg+FV7QgoyVwN5TBRJXdkvYo73qY8I71ONd/7lRrU+T/9b3nI+dRM3Y/D/DeMSe07/Ge9L/IDTnoloUefoOKIEGxmfr+zc0RzJ+S9nev8M+sepyA2LvbGGJKMAiraV/DpQeb3Xf8UnC7UihAjx9NtnXI5DY15YKDupj+FtwoQ4xGgV/M1Xy57XuDajnSU4wbTSqwomTE9PugpbZwqO9zbisMFA6H6PTWXn/henL8EM/D6BnL6DjsqmZlQSckabsNtuBQ=='
+      req.sign_params['VK_MAC'].should == 'K7CEsDNfGq6/Cd6BazligbF2tM2EmXt6ykdY2Uxe8MAHaoZXsd+yM9jcRIHKIl9rPv8vQ/krJtuWHtVB3xzYHhkhdyuXUCgTngs0HEJG/Zntu6z3CsgdyZGCLcuw3tM6wz0Sg6PFwu1jqiNAV6TE2SMHMvEy/ii2ZBB2hs0AvCnYsP3z5ouZPoUymo5XSBGccTsdTNXphK57p1sCfwKUbCEdFTuDnvr/Aj0HFLqNpM+42UhZDZSJRDtcGyxJqFpXTvYHXdBytD1rMPJeEOZOAx90KZDZWwh+IDxoDTL4gfubDm9REqBCBf3HrHUOMPK817HDcM9iSC82h1zhk0/OVQ=='
     end
   end
   

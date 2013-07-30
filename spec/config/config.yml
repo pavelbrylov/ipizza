@@ -7,7 +7,7 @@ swedbank:
   file_key: ../certificates/dealer.key
   key_secret: foobar
   encoding: ISO-8859-4
-  snd_id: sender
+  snd_id: fraktal
 
 seb:
   service_url: https://www.seb.ee/banklink
@@ -18,7 +18,7 @@ seb:
   file_key: ../certificates/dealer.key
   key_secret: foobar
   encoding: UTF-8
-  snd_id: sender
+  snd_id: testvpos
 
 nordea:
   payments_service_url: https://netbank.nordea.com/pnbepaytest/epayn.jsp

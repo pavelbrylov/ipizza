@@ -4,6 +4,8 @@ module Ipizza::Provider
     class << self
       attr_accessor :service_url, :return_url, :cancel_url, :file_key, :key_secret, :file_cert, :snd_id, :encoding
     end
+    
+    Id = 'swedbank'
 
     def payment_request(payment, service = 1002)
       req = Ipizza::PaymentRequest.new
@@ -27,13 +29,13 @@ module Ipizza::Provider
 
       param_order = ['VK_SERVICE', 'VK_VERSION', 'VK_SND_ID', 'VK_STAMP', 'VK_AMOUNT', 'VK_CURR', 'VK_REF', 'VK_MSG']
 
-      req.sign(self.class.file_key, self.class.key_secret, param_order, 'VK_MAC', 'swedbank')
+      req.sign(self.class.file_key, self.class.key_secret, param_order, 'VK_MAC', Id)
       req
     end
 
     def payment_response(params)
       response = Ipizza::PaymentResponse.new(params)
-      response.verify(self.class.file_cert, self.class.encoding, 'swedbank')
+      response.verify(self.class.file_cert, :encoding => self.class.encoding, :bank_name => Id, :snd_id => self.class.snd_id)
       return response
     end
 
@@ -62,7 +64,7 @@ module Ipizza::Provider
 
     def authentication_response(params)
       response = Ipizza::AuthenticationResponse.new(params)
-      response.verify(self.class.file_cert, self.class.encoding, 'swedbank')
+      response.verify(self.class.file_cert, :encoding => self.class.encoding, :bank_name => Id)
       return response
     end
   end

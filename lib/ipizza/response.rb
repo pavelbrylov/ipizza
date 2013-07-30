@@ -14,14 +14,21 @@ class Ipizza::Response
     @params = params
   end
 
-  def verify(certificate_path, charset = 'UTF-8', bankname = nil)
+  def verify(certificate_path, options = {})
     begin
+      bank_name = options[:bank_name] if options
+      snd_id = options[:snd_id] if options
+      
       param_order = @@response_param_order[@params['VK_SERVICE']]
       verify_params = param_order.inject(Hash.new) { |h, p| h[p] = @params[p]; h }
-      mac_string = Ipizza::Util.mac_data_string(verify_params, param_order, bankname)
+      mac_string = Ipizza::Util.mac_data_string(verify_params, param_order, bank_name)
 
-      @valid = Ipizza::Util.verify_signature(certificate_path, @params['VK_MAC'], mac_string)
-    rescue
+      signature_valid = Ipizza::Util.verify_signature(certificate_path, @params['VK_MAC'], mac_string)      
+      snd_valid = (snd_id.nil? || snd_id == "") ? true : snd_id == @params['VK_REC_ID']
+      
+      @valid = signature_valid && snd_valid
+    rescue => e
+      raise e
       @valid = false
     end
   end
