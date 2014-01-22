@@ -46,5 +46,34 @@ module Ipizza::Provider
 
       return response
     end
+
+    def authentication_request(service_no = 4001)
+      req = Ipizza::AuthenticationRequest.new
+      req.service_url = self.class.service_url
+      req.sign_params = {
+        'VK_SERVICE' => service_no,
+        'VK_VERSION' => '008',
+        'VK_SND_ID' => self.class.snd_id,
+        'VK_REPLY' => '3002',
+        'VK_RETURN' => self.class.return_url,
+        'VK_DATE' => Date.today.strftime('%d.%m.%Y'),
+        'VK_TIME' => Time.now.strftime('%H:%M:%S')
+      }
+
+      req.extra_params = {
+        'VK_CHARSET' => self.class.encoding
+      }
+
+      param_order = ['VK_SERVICE', 'VK_VERSION', 'VK_SND_ID', 'VK_REPLY', 'VK_RETURN', 'VK_DATE', 'VK_TIME']
+
+      req.sign(self.class.file_key, self.class.key_secret, param_order)
+      req
+    end
+
+    def authentication_response(params)
+      response = Ipizza::AuthenticationResponse.new(params)
+      response.verify(self.class.file_cert)
+      return response
+    end
   end
 end
