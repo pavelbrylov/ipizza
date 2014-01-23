@@ -47,7 +47,7 @@ module Ipizza::Provider
       return response
     end
 
-    def authentication_request(service_no = 4001)
+    def authentication_request(service_no = 4002)
       req = Ipizza::AuthenticationRequest.new
       req.service_url = self.class.service_url
       req.sign_params = {
