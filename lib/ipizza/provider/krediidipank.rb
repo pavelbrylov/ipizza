@@ -54,6 +54,8 @@ module Ipizza::Provider
         'VK_SERVICE' => service_no,
         'VK_VERSION' => '008',
         'VK_SND_ID' => self.class.snd_id,
+        'VK_REC_ID' => 'KREP',
+        'VK_NONCE' => SecureRandom.hex(50),
         'VK_REPLY' => '3002',
         'VK_RETURN' => self.class.return_url,
         'VK_DATE' => Date.today.strftime('%d.%m.%Y'),
