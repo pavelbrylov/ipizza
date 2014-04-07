@@ -6,7 +6,8 @@ module Ipizza
     attr_accessor :service_url
     
     def sign(privkey_path, privkey_secret, order, mac_param = 'VK_MAC', bankname = nil)
-      signature = Ipizza::Util.sign(privkey_path, privkey_secret, Ipizza::Util.mac_data_string(sign_params, order, bankname))
+      sign_data =  Ipizza::Util.mac_data_string(sign_params, order, bankname)
+      signature = Ipizza::Util.sign(privkey_path, privkey_secret, sign_data)
       self.sign_params[mac_param] = signature
     end
     

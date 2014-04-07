@@ -47,7 +47,8 @@ module Ipizza::Provider
       return response
     end
 
-    def authentication_request(service_no = 4002)
+    def authentication_request(service_no = 4002, return_url)
+      fail "only 4002 service_no allowed" unless service_no == 4002
       req = Ipizza::AuthenticationRequest.new
       req.service_url = self.class.service_url
       req.sign_params = {
@@ -55,16 +56,18 @@ module Ipizza::Provider
         'VK_VERSION' => '008',
         'VK_SND_ID' => self.class.snd_id,
         'VK_REC_ID' => 'KREP',
-        'VK_NONCE' => SecureRandom.hex(50),
-        'VK_RETURN' => self.class.return_url,
+        'VK_NONCE' => SecureRandom.hex,
+        'VK_RETURN' => return_url
       }
-
-      req.extra_params = {
-        'VK_CHARSET' => self.class.encoding
-      }
-
-      param_order = ['VK_SERVICE', 'VK_VERSION', 'VK_SND_ID', 'VK_REC_ID', 'VK_NONCE', 'VK_RETURN']
-
+      req.extra_params = {'VK_CHARSET' => self.class.encoding}
+      param_order = [
+        'VK_SERVICE', 
+        'VK_VERSION', 
+        'VK_SND_ID', 
+        'VK_REC_ID', 
+        'VK_NONCE', 
+        'VK_RETURN'
+      ]
       req.sign(self.class.file_key, self.class.key_secret, param_order)
       req
     end

@@ -6,8 +6,8 @@ module Ipizza
     
     class << self
       
-      def verify_signature(certificate_path, signature, data)
-        certificate = OpenSSL::X509::Certificate.new(File.read(certificate_path).gsub(/  /, '')).public_key
+      def verify_signature(pkey_path, signature, data)
+        certificate = OpenSSL::PKey::RSA.new(File.read(pkey_path))
         @valid = certificate.verify(OpenSSL::Digest::SHA1.new, Base64.decode64(signature), data)
       end
       
