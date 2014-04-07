@@ -56,17 +56,14 @@ module Ipizza::Provider
         'VK_SND_ID' => self.class.snd_id,
         'VK_REC_ID' => 'KREP',
         'VK_NONCE' => SecureRandom.hex(50),
-        'VK_REPLY' => '3002',
         'VK_RETURN' => self.class.return_url,
-        'VK_DATE' => Date.today.strftime('%d.%m.%Y'),
-        'VK_TIME' => Time.now.strftime('%H:%M:%S')
       }
 
       req.extra_params = {
         'VK_CHARSET' => self.class.encoding
       }
 
-      param_order = ['VK_SERVICE', 'VK_VERSION', 'VK_SND_ID', 'VK_REPLY', 'VK_RETURN', 'VK_DATE', 'VK_TIME']
+      param_order = ['VK_SERVICE', 'VK_VERSION', 'VK_SND_ID', 'VK_REC_ID', 'VK_NONCE', 'VK_RETURN']
 
       req.sign(self.class.file_key, self.class.key_secret, param_order)
       req
